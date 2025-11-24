@@ -20,7 +20,7 @@ Search for air quality data by city name.
 
 **Example Request:**
 ```bash
-curl "http://localhost:8000/api/v1/search?city=London"
+curl "http://localhost:8000/api/v1/search?city=Pune"
 ```
 
 **Success Response (200 OK):**
@@ -28,7 +28,7 @@ curl "http://localhost:8000/api/v1/search?city=London"
 {
   "status": "success",
   "data": {
-    "city": "London",
+    "city": "Pune",
     "country": "GB",
     "coordinates": {
       "lat": 51.5074,
@@ -351,7 +351,7 @@ const searchCity = async (cityName) => {
   }
 };
 
-await searchCity('Tokyo');
+await searchCity('Bangalore');
 ```
 
 ### 2. Checking Cache Performance
@@ -378,7 +378,7 @@ def test_cache_performance(city):
     print(f'Second request (cached): {time2:.2f}ms')
     print(f'Speedup: {time1/time2:.1f}x faster')
 
-test_cache_performance('Paris')
+test_cache_performance('Delhi')
 ```
 
 ### 3. Monitoring Cache Statistics
@@ -395,65 +395,13 @@ done
 
 ---
 
-## Best Practices
-
-### For Developers
-
-1. **Always handle errors gracefully**
-   - Check `status` field in response
-   - Display user-friendly error messages
-
-2. **Implement debouncing for search inputs**
-   - Wait 300-500ms before API call
-   - Prevents excessive requests
-
-3. **Show loading states**
-   - Indicate to users that data is loading
-   - Disable inputs during fetch
-
-4. **Display cache indicators**
-   - Show users when data is from cache
-   - Include timestamp for freshness
-
-5. **Monitor performance**
-   - Track response times
-   - Log cache hit rates
-   - Alert on high API usage
-
-### For Production
-
-1. **Use environment variables**
-   - Never commit API keys
-   - Use `.env` files
-
-2. **Enable Redis**
-   - Better performance than local memory
-   - Survives server restarts
-
-3. **Set appropriate cache TTL**
-   - Balance freshness vs API usage
-   - 30 minutes is recommended
-
-4. **Monitor API quota**
-   - Track monthly usage
-   - Set up alerts near limits
-
-5. **Implement retry logic**
-   - Handle transient failures
-   - Exponential backoff
-
----
-
 ## Testing the API
 
 ### Using cURL
 
 ```bash
-# Search for London
-curl "http://localhost:8000/api/v1/search?city=London"
-
-# With pretty printing
-curl "http://localhost:8000/api/v1/search?city=London" | jq
+# Search for Pune
+curl "http://localhost:8000/api/v1/search?city=Pune"
 
 # Check cache stats
 curl "http://localhost:8000/api/v1/cache/stats" | jq
@@ -485,7 +433,7 @@ print(f"Hit rate: {stats['data']['hit_rate']}%")
 1. Import collection:
    - Method: GET
    - URL: `http://localhost:8000/api/v1/search`
-   - Params: `city = London`
+   - Params: `city = Pune`
 
 2. Send request and inspect response
 
@@ -510,7 +458,6 @@ For API-related questions:
 1. Check this documentation
 2. Review the README.md
 3. Test with provided examples
-4. Open an issue on GitHub
 
 ---
 

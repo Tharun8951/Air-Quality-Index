@@ -75,7 +75,7 @@ Before running this project, make sure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/air-quality.git
+git clone https://github.com/Tharun8951/Air-Quality-Index.git
 cd air-quality
 ```
 
@@ -120,10 +120,7 @@ REDIS_URL=redis://localhost:6379/1
 CACHE_TTL=1800
 MAX_CACHE_ENTRIES=1000
 
-# Django Settings
 DEBUG=True
-SECRET_KEY=your-secret-key-here
-ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
 Note: Get your free API key from https://openweathermap.org/api
@@ -180,7 +177,7 @@ Base URL: http://localhost:8000/api/v1/
 
 #### Search for a City
 ```bash
-curl "http://localhost:8000/api/v1/search?city=London"
+curl "http://localhost:8000/api/v1/search?city=Pune"
 ```
 
 Response:
@@ -188,7 +185,7 @@ Response:
 {
  "status": "success",
   "data": {
-    "city": "London",
+    "city": "Pune",
     "country": "GB",
     "coordinates": {"lat": 51.5074, "lon": -0.1278},
     "aqi": {
@@ -254,14 +251,14 @@ The application features:
 ### How It Works
 
 1. First Request (Cache Miss):
-   - User searches for "London"
+   - User searches for "Pune"
    - Backend checks cache - Not found
    - Fetches from OpenWeather API (~500-1000ms)
    - Stores in cache with 30-minute TTL
    - Returns data to user
 
 2. Subsequent Requests (Cache Hit):
-   - User searches for "London" again
+   - User searches for "Pune" again
    - Backend checks cache - Found
    - Returns cached data instantly (<50ms)
    - Around 10-20x faster than API call
@@ -300,29 +297,10 @@ curl http://localhost:8000/api/v1/cache/stats
 
 ### Test Cache Behavior
 
-1. Search for a city (e.g., "Tokyo")
+1. Search for a city (e.g., "Bangalore")
 2. Note the response time in the UI
 3. Search for the same city again
 4. Response time should be <50ms with "Cached Data" indicator
-
-## Production Deployment
-
-### Backend
-
-1. Set DEBUG=False in .env
-2. Use a production-grade WSGI server (e.g., Gunicorn)
-3. Setup Redis for distributed caching
-4. Configure proper SECRET_KEY
-5. Use environment-based settings
-
-### Frontend
-
-```bash
-cd frontend
-npm run build
-```
-
-Serve the dist folder with a web server (Nginx, Apache, etc.)
 
 ## Project Structure
 
@@ -352,7 +330,6 @@ air-quality/
 │   ├── package.json
 │   └── vite.config.js
 ├── .gitignore
-├── .env.example
 └── README.md
 ```
 
@@ -421,7 +398,7 @@ sudo systemctl start redis
 
 ### "City not found" error
 - Check spelling
-- Try major cities first (e.g., "London", "Paris", "Tokyo")
+- Try major cities first (e.g., "Pune", "Delhi", "Bangalore")
 - Ensure API key is valid
 
 ### "Invalid API key" error

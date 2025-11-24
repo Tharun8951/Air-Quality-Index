@@ -34,8 +34,6 @@ source venv/bin/activate  # Mac/Linux
 pip install -r requirements.txt
 python manage.py migrate
 
-# Every time:
-.\venv\Scripts\activate
 python manage.py runserver
 ```
 
@@ -60,7 +58,7 @@ Frontend runs at: http://localhost:5173
 ## Test It Works
 
 1. Open http://localhost:5173
-2. Type "London" in search box
+2. Type "Pune" in search box
 3. Click "Search"
 4. You should see air quality data
 
@@ -72,7 +70,7 @@ Frontend runs at: http://localhost:5173
 - Restart backend server after adding key
 
 **"City not found"**
-- Try major cities: London, Paris, Tokyo, New York
+- Try major cities: Pune, Bangalore, Delhi, Kolkata
 - Check spelling
 
 **Backend won't start**
@@ -88,24 +86,6 @@ Frontend runs at: http://localhost:5173
 - Python 3.10+ (https://www.python.org/downloads/)
 - Node.js 20+ (https://nodejs.org/)
 - Git (https://git-scm.com/)
-
-## Next Steps
-
-After testing locally:
-
-1. Create GitHub repo:
-   ```bash
-   git init
-   git add .
-   git commit -m "Air Quality Search Engine"
-   git remote add origin https://github.com/yourusername/air-quality.git
-   git push -u origin main
-   ```
-
-2. Submit:
-   - Reply to coding challenge email
-   - Don't change subject line
-   - Include: GitHub link
 
 ## More Info
 
