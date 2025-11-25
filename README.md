@@ -25,7 +25,7 @@ A full-stack web application for searching and displaying real-time air quality 
 - Fully responsive design
 - Smooth animations
 
-##  Data Provided
+## Data Provided
 
 - Overall Air Quality Index (AQI): 1-5 scale with interpretation
 - 8+ Pollutants: PM2.5, PM10, CO, NO, NO2, O3, SO2, NH3
@@ -61,53 +61,115 @@ I chose OpenWeatherMap over AQICN for the following reasons:
 - Axios - HTTP client
 - Modern CSS - Responsive design with gradients & animations
 
+### Infrastructure
+- Docker & Docker Compose - Containerization
+- Redis - In-memory caching
+
 ## Prerequisites
 
 Before running this project, make sure you have:
 
-- Python 3.10+ installed
-- Node.js 20.12+ and npm installed
-- OpenWeatherMap API Key (free tier) - Get it from https://openweathermap.org/api
-- (Optional) Redis Server - For better caching performance
+- **Docker & Docker Compose** installed (recommended)
+  - Docker Desktop for Windows/Mac
+  - Docker Engine for Linux
+- **OR** Manual setup:
+  - Python 3.10+ installed
+  - Node.js 20.12+ and npm installed
+- **OpenWeatherMap API Key** (free tier) - Get it from https://openweathermap.org/api
 
 ## Getting Started
 
-### 1. Clone the Repository
+### Method 1: Docker (Recommended)
+
+This is the easiest way to run the entire application.
+
+#### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Tharun8951/Air-Quality-Index.git
+git clone https://github.com/yourusername/air-quality.git
 cd air-quality
 ```
 
-### 2. Backend Setup
+#### 2. Configure Environment Variables
 
-#### Navigate to backend directory
+Create a `.env` file in the `backend/` directory:
+
+```bash
+# backend/.env
+OPENWEATHER_API_KEY=your_api_key_here
+```
+
+Note: Get your free API key from https://openweathermap.org/api
+
+#### 3. Run with Docker
+
+**Windows/Linux:**
+```bash
+python run.py
+```
+
+**Mac/Linux (alternative):**
+```bash
+chmod +x run.sh
+./run.sh
+```
+
+This will:
+- Start Redis container
+- Build and start Backend (Django) container
+- Build and start Frontend (React) container
+- Run migrations automatically
+
+Access the application at:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- Redis: localhost:6379
+
+#### 4. Stop the Application
+
+Press `Ctrl+C` to stop all containers.
+
+To stop and remove containers:
+```bash
+docker compose down
+```
+
+### Method 2: Manual Setup (Without Docker)
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/air-quality.git
+cd air-quality
+```
+
+#### 2. Backend Setup
+
+Navigate to backend directory:
 ```bash
 cd backend
 ```
 
-#### Create and activate virtual environment
+Create and activate virtual environment:
 
-Windows:
+**Windows:**
 ```bash
 python -m venv venv
-.\\venv\\Scripts\\activate
+.\venv\Scripts\activate
 ```
 
-Mac/Linux:
+**Mac/Linux:**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-#### Install dependencies
+Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-#### Configure environment variables
-
-Create a `.env` file in the `backend` directory:
+Configure environment variables - Create `backend/.env`:
 
 ```env
 # OpenWeatherMap API Configuration
@@ -120,43 +182,44 @@ REDIS_URL=redis://localhost:6379/1
 CACHE_TTL=1800
 MAX_CACHE_ENTRIES=1000
 
+# Django Settings
 DEBUG=True
+SECRET_KEY=your-secret-key-here
+ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
-Note: Get your free API key from https://openweathermap.org/api
-
-#### Run migrations
+Run migrations:
 ```bash
 python manage.py migrate
 ```
 
-#### Start the Django development server
+Start the Django development server:
 ```bash
 python manage.py runserver
 ```
 
 Backend will be running at http://localhost:8000
 
-### 3. Frontend Setup
+#### 3. Frontend Setup
 
-#### Open a new terminal and navigate to frontend directory
+Open a new terminal and navigate to frontend directory:
 ```bash
 cd frontend
 ```
 
-#### Install dependencies
+Install dependencies:
 ```bash
 npm install
 ```
 
-#### Start the development server
+Start the development server:
 ```bash
 npm run dev
 ```
 
 Frontend will be running at http://localhost:5173
 
-### 4. Open the Application
+#### 4. Open the Application
 
 Open your browser and navigate to:
 ```
@@ -177,7 +240,7 @@ Base URL: http://localhost:8000/api/v1/
 
 #### Search for a City
 ```bash
-curl "http://localhost:8000/api/v1/search?city=Pune"
+curl "http://localhost:8000/api/v1/search?city=London"
 ```
 
 Response:
@@ -185,7 +248,7 @@ Response:
 {
  "status": "success",
   "data": {
-    "city": "Pune",
+    "city": "London",
     "country": "GB",
     "coordinates": {"lat": 51.5074, "lon": -0.1278},
     "aqi": {
@@ -251,14 +314,14 @@ The application features:
 ### How It Works
 
 1. First Request (Cache Miss):
-   - User searches for "Pune"
+   - User searches for "London"
    - Backend checks cache - Not found
    - Fetches from OpenWeather API (~500-1000ms)
    - Stores in cache with 30-minute TTL
    - Returns data to user
 
 2. Subsequent Requests (Cache Hit):
-   - User searches for "Pune" again
+   - User searches for "London" again
    - Backend checks cache - Found
    - Returns cached data instantly (<50ms)
    - Around 10-20x faster than API call
@@ -297,10 +360,39 @@ curl http://localhost:8000/api/v1/cache/stats
 
 ### Test Cache Behavior
 
-1. Search for a city (e.g., "Bangalore")
+1. Search for a city (e.g., "Tokyo")
 2. Note the response time in the UI
 3. Search for the same city again
 4. Response time should be <50ms with "Cached Data" indicator
+
+## Docker Commands
+
+### Useful Docker Commands
+
+```bash
+# Start all services
+docker compose up
+
+# Start in detached mode (background)
+docker compose up -d
+
+# Rebuild containers
+docker compose up --build
+
+# Stop all services
+docker compose down
+
+# View logs
+docker compose logs
+
+# View logs for specific service
+docker compose logs backend
+docker compose logs frontend
+docker compose logs redis
+
+# Execute command in running container
+docker compose exec backend python manage.py createsuperuser
+```
 
 ## Project Structure
 
@@ -317,6 +409,8 @@ air-quality/
 │   │   ├── settings.py           # Django settings
 │   │   └── urls.py               # Main URL config
 │   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── .env                      # Create this file
 │   └── manage.py
 ├── frontend/
 │   ├── src/
@@ -328,8 +422,13 @@ air-quality/
 │   │   ├── App.jsx               # Main App component
 │   │   └── index.css             # Styles
 │   ├── package.json
+│   ├── Dockerfile
 │   └── vite.config.js
+├── docker-compose.yml            # Docker orchestration
+├── run.py                        # Python run script
+├── run.sh                        # Bash run script
 ├── .gitignore
+├── .env.example
 └── README.md
 ```
 
@@ -370,25 +469,27 @@ Responsive Grid:
 - CSS Grid for pollutant cards
 - Auto-fit layout for different screen sizes
 
-## Redis (Optional)
+## Redis (Optional for Manual Setup)
 
-If Redis is not installed, the application automatically falls back to Django's local memory cache. Redis is recommended for:
+If running manually without Docker, Redis is optional. The application automatically falls back to Django's local memory cache.
+
+Redis is recommended for:
 - Multi-server deployments
 - Persistent caching across restarts
 - Better performance under high load
 
-To install Redis:
+To install Redis manually:
 
-Windows:
+**Windows:**
 Download from https://github.com/microsoftarchive/redis/releases
 
-Mac:
+**Mac:**
 ```bash
 brew install redis
 brew services start redis
 ```
 
-Linux:
+**Linux:**
 ```bash
 sudo apt-get install redis-server
 sudo systemctl start redis
@@ -398,22 +499,28 @@ sudo systemctl start redis
 
 ### "City not found" error
 - Check spelling
-- Try major cities first (e.g., "Pune", "Delhi", "Bangalore")
+- Try major cities first (e.g., "London", "Paris", "Tokyo")
 - Ensure API key is valid
 
 ### "Invalid API key" error
-- Verify .env file has correct OPENWEATHER_API_KEY
+- Verify backend/.env file has correct OPENWEATHER_API_KEY
 - Ensure API key is activated (can take 10-15 minutes after registration)
+- Restart backend server after adding key
 
 ### Backend not starting
 - Check Python version (3.10+)
-- Ensure virtual environment is activated
+- Ensure virtual environment is activated (if not using Docker)
 - Run pip install -r requirements.txt again
 
 ### Frontend not connecting to backend
 - Verify backend is running on http://localhost:8000
 - Check browser console for CORS errors
 - Ensure CORS is configured in Django settings
+
+### Docker issues
+- Make sure Docker Desktop is running
+- Check if ports 8000, 5173, 6379 are available
+- Try: docker compose down && docker compose up --build
 
 ## License
 

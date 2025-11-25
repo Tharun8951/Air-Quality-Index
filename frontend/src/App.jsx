@@ -64,7 +64,7 @@ function App() {
           <input
             type="text"
             className="search-input"
-            placeholder="Enter city name (e.g., London, New York, Tokyo)..."
+            placeholder="Enter city name (e.g., Pune, Bangalore, Delhi)..."
             value={cityName}
             onChange={(e) => setCityName(e.target.value)}
             disabled={loading}
